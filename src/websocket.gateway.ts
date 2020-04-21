@@ -1,8 +1,8 @@
-import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection } from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway()
-export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection {
+export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer()
   server: Server;
@@ -37,11 +37,18 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection {
   /**
    * Perform actions on connecting socket
    * @param client
-   * @param args
    */
   handleConnection(client: Socket) {
     client.on('subscribe', (room: string, callback) => this.handleSubscribeEvent(client, room, callback));
     client.on('unsubscribe', (room: string, callback) => this.handleUnsubscribeEvent(client, room, callback));
+  }
+
+  /**
+   * Perform actions on connecting socket
+   * @param client
+   */
+  handleDisconnect(client: any) {
+    // Disconnect logic here
   }
 
   /**
