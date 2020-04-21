@@ -14,7 +14,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection {
   afterInit(server: Server) {
 
     server.use(async (socket: Socket, next) => {
-			const query = socket.handshake.query;
+      const query = socket.handshake.query;
 
       if (this.isValid(query)) {
         next();
@@ -22,7 +22,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection {
       }
 
       return next(new Error("401"));
-		});
+    });
   }
 
   /**
@@ -40,32 +40,32 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection {
    * @param args
    */
   handleConnection(client: Socket) {
-		client.on('subscribe', (room: string, callback) => this.handleSubscribeEvent(client, room, callback));
-		client.on('unsubscribe', (room: string, callback) => this.handleUnsubscribeEvent(client, room, callback));
+    client.on('subscribe', (room: string, callback) => this.handleSubscribeEvent(client, room, callback));
+    client.on('unsubscribe', (room: string, callback) => this.handleUnsubscribeEvent(client, room, callback));
   }
 
-	/**
-	 * Handle Subscribe request from Socket
-	 * @param client
-	 * @param room
-	 */
-	async handleSubscribeEvent(client: Socket, room: string, callback) {
+  /**
+   * Handle Subscribe request from Socket
+   * @param client
+   * @param room
+   */
+  async handleSubscribeEvent(client: Socket, room: string, callback) {
 
     // Validate if client can join room here
 
     client.join(room);
-		callback(`subscribed: ${room}`);
+    callback(`subscribed: ${room}`);
   }
 
-	/**
-	 * Handle Unsubscribe request from Socket
-	 * @param client
-	 * @param room
-	 */
-	async handleUnsubscribeEvent(client: Socket, room: string, callback) {
-		client.leave(room);
-		callback(`unsubscribed: ${room}`);
-	}
+  /**
+   * Handle Unsubscribe request from Socket
+   * @param client
+   * @param room
+   */
+  async handleUnsubscribeEvent(client: Socket, room: string, callback) {
+    client.leave(room);
+    callback(`unsubscribed: ${room}`);
+  }
 
   /**
    * Publish Public Event
